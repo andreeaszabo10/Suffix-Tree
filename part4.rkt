@@ -4,11 +4,6 @@
 
 (provide (all-defined-out))
 
-;; Vom prelua toate funcțiile din etapele 1-3 (exceptând
-;; longest-common-substring, care nu beneficiază de 
-;; reprezentarea ca flux întrucât parcurge tot arborele)
-;; și le vom adapta la noua reprezentare a unui ST.
-;;
 ;; Pentru că un ST este construit pornind de la o colecție
 ;; de sufixe și pentru că ne dorim să nu calculăm toate
 ;; sufixele decât dacă este nevoie, vom modifica toate
@@ -41,7 +36,6 @@
 ;; faceți singuri acest "re-design".
 
 
-; TODO
 ; Copiați din etapele anterioare implementările funcțiilor
 ; de mai jos și modificați-le astfel:
 ; - Toate funcțiile care lucrează cu liste de sufixe vor
