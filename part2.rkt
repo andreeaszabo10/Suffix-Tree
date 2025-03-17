@@ -1,21 +1,21 @@
 #lang racket
 (require "suffix-tree.rkt")
-(require "etapa1.rkt")
+(require "part.rkt")
 
 (provide (all-defined-out))
 
-;; În această etapă definim algoritmul de construcție a unui
+;; e definit algoritmul de construcție a unui
 ;; arbore de sufixe (atât cel compact, cât și cel atomic) pe
 ;; baza unui text și a unui alfabet dat. Se știe că textul
 ;; utilizează doar simboluri prezente în alfabet.
 ;; Abordarea este următoarea:
-;; 1. obținem toate sufixele textului
-;; 2. pentru fiecare caracter din alfabet, determinăm sufixele
+;; 1. obțin toate sufixele textului
+;; 2. pentru fiecare caracter din alfabet, determin sufixele
 ;;    care încep cu acel caracter: ele vor fi grupate în câte
 ;;    o ramură a arborelui de sufixe (exceptând caracterele
 ;;    care nu apar in text - acestea nu generează ramuri)
 ;; 3. pentru fiecare listă de sufixe care încep cu un același
-;;    caracter, determinăm eticheta ramurii, respectiv noile
+;;    caracter, determin eticheta ramurii, respectiv noile
 ;;    sufixe care vor genera subarborele de sub etichetă
 ;;    - în cazul unui AST (atomic suffix tree), eticheta este
 ;;      chiar primul caracter, iar noile sufixe sunt vechile
@@ -24,14 +24,13 @@
 ;;      cel mai lung prefix comun al sufixelor, iar sufixele
 ;;      noi se obțin din cele vechi prin îndepărtarea acestui
 ;;      prefix
-;; 4. transformăm fiecare rezultat de la pasul 3 într-o ramură
+;; 4. transform fiecare rezultat de la pasul 3 într-o ramură
 ;;    - eticheta este deja calculată
 ;;    - calculul subarborilor se realizează repetând pașii 2-4
 ;;      pentru noile sufixe
 
 
-; TODO 1
-; Implementați recursiv o funcție care primește un text (listă 
+; funcție recursiva care primește un text (listă 
 ; de caractere) și determină lista tuturor sufixelor acestuia
 ; (de la cel mai lung la cel mai scurt).
 ; Se știe că textul se va termina cu caracterul special "$", 
@@ -41,7 +40,8 @@
 ; ex:
 ; (get-suffixes '(#\w #\h #\y #\$))
 ; => '((#\w #\h #\y #\$) (#\h #\y #\$) (#\y #\$) (#\$))
-; Folosiți recursivitate pe stivă.
+; recursivitate pe stivă
+
 (define (get-suffixes text)
   (define lista '())
   (cond
@@ -51,40 +51,30 @@
   )
 
 
-; TODO 2
-; Implementați o funcție care primește o listă de cuvinte 
+; funcție care primește o listă de cuvinte 
 ; și un caracter ch și întoarce acele cuvinte din listă care 
 ; încep cu caracterul ch.
-; Atenție, este posibil ca unele cuvinte să fie vide.
-; Folosiți funcționale (și nu folosiți recursivitate explicită).
+; cu functionale
+
 (define (get-ch-words words ch)
   (filter (lambda (a) (and (not(null? a)) (equal? (car a) ch))) words)
   )
 
 
-; TODO 3
-; Implementați o funcție care primește o listă nevidă de sufixe 
+; funcție care primește o listă nevidă de sufixe 
 ; care încep cu același caracter și calculează perechea
 ; (etichetă AST pentru aceste sufixe, lista noilor sufixe).
-; Reamintim că pentru un AST eticheta este chiar primul caracter
-; (dar sub formă de listă de caractere, pentru a putea fi 
-; procesată la fel ca etichetele mai complexe), iar noile sufixe 
-; se obțin din cele vechi prin eliminarea acestui caracter.
-; Nu folosiți recursivitate explicită.
+
 (define (ast-func suffixes)
   (cond
     ((null? suffixes) '())
     (else (cons (list (caar suffixes)) (map (lambda (a) (cdr a)) suffixes)))))
 
 
-; TODO 4
-; Implementați o funcție care primește o listă nevidă de sufixe 
+; funcție care primește o listă nevidă de sufixe 
 ; care încep cu același caracter și calculează perechea
 ; (etichetă CST pentru aceste sufixe, lista noilor sufixe).
-; Reamintim că pentru un CST eticheta este cel mai lung prefix
-; comun, iar noile sufixe se obțin din cele vechi prin eliminarea 
-; acestui prefix.
-; Nu folosiți recursivitate explicită.
+
 (define (cst-func suffixes)
   (cond
     ((null? suffixes) '())
@@ -96,18 +86,15 @@
            (cons ch (map (lambda(a) (function len a)) suffixes)))))
 
 
-; TODO 5
-; Implementați funcția suffixes->st care construiește un
+
+; funcția suffixes->st construiește un
 ; arbore de sufixe pe baza unei liste de sufixe, a unui 
 ; alfabet (listă de caractere care include toate caracterele
 ; din sufixe), și a unei funcții care indică modul de
 ; etichetare (atomic sau compact).
-; Când argumentul funcție va fi ast-func, vom obține un AST.
-; Când argumentul funcție va fi cst-func, vom obține un CST.
-; Obs: Funcția surprinde pașii 2-4 descriși mai sus.
-; Funcția suffixes->st poate fi recursivă explicit, dar
-; pentru celelalte prelucrări (pașii 2 și 3) trebuie să
-; folosiți funcționale.
+; Când argumentul funcție va fi ast-func, se va obține un AST.
+; Când argumentul funcție va fi cst-func, se va obține un CST.
+
 (define (suffixes->st labeling-func suffixes alphabet)
   (define (not-null? x)
     (not (null? x)))
@@ -129,13 +116,8 @@
   )
 
 
-; TODO 6
-; Această sarcină constă în implementarea a trei funcții:
-; text->st, text->ast, text->cst, unde text->ast și text->cst
-; trebuie obținute ca aplicații parțiale ale lui text->st.
-; În acest scop, funcția text->st trebuie să fie curry.
 
-; a) Implementați funcția text->st care primește un text
+; funcția text->st primește un text
 ; (listă de caractere) și o funcție de etichetare și întoarce
 ; arborele de sufixe corespunzând acestui text cu această
 ; metodă de etichetare.
@@ -144,24 +126,21 @@
 ; - obținem alfabetul sortat asociat textului prin utilizarea
 ;   funcțiilor de bibliotecă sort, remove-duplicates, char<?
 ;   (inclusiv caracterul $)
-; - apelăm corespunzător funcția suffixes->st
-; Vă veți defini singuri parametrii funcției text->st și ordinea 
-; acestora, dar funcția trebuie să fie curry într-un mod care 
-; facilitează derivarea funcțiilor text->ast și text->cst de 
-; mai jos prin aplicație parțială a funcției text->st.
-; Obs: Din acest motiv, checker-ul testează doar funcțiile
-; text->ast și text->cst.
+; - apelez corespunzător funcția suffixes->st
+
 (define (text->st text)
   (lambda (labeling-func) ((lambda (text) (suffixes->st labeling-func (get-suffixes (append text '(#\$))) (sort (remove-duplicates (append text '(#\$))) char<?))) text)))
 
-; b) Din funcția text->st derivați funcția text->ast care
+; din funcția text->st deriva funcția text->ast care
 ; primește un text (listă de caractere) și întoarce AST-ul
 ; asociat textului.
+
 (define (text->ast text)
   ((text->st text) ast-func))
 
-; c) Din funcția text->st derivați funcția text->cst care
+; din funcția text->st derivați funcția text->cst care
 ; primește un text (listă de caractere) și întoarce CST-ul
 ; asociat textului.
+
 (define (text->cst text)
   ((text->st text) cst-func))
