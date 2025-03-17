@@ -3,15 +3,15 @@
 
 (provide (all-defined-out))
 
-; TODO 2
-; Implementați o funcție care primește două cuvinte (liste
+; funcție care primește două cuvinte (liste
 ; de caractere) w1 și w2 și calculează cel mai lung prefix
 ; comun al acestora, împreună cu restul celor două cuvinte
 ; după eliminarea prefixului comun.
 ; ex:
 ; (longest-common-prefix '(#\w #\h #\y) '(#\w #\h #\e #\n))
 ; => '((#\w #\h) (#\y) (#\e #\n))
-; Folosiți recursivitate pe coadă.
+; cu recursivitate pe coada
+
 (define (longest-common-prefix w1 w2)
   (define (common w1 w2 prefix)
     (cond
@@ -24,12 +24,12 @@
   (common w1 w2 '()))
 
 
-; TODO 3
-; Implementați recursiv o funcție care primește o listă nevidă 
+; funcție recursiva care primește o listă nevidă 
 ; de cuvinte care încep cu același caracter și calculează cel 
 ; mai lung prefix comun al acestora.
-; Opriți căutarea (parcurgerea) în momentul în care aveți garanția 
+; căutarea e oprita (parcurgerea) în momentul în care aveți garanția 
 ; că prefixul comun curent este prefixul comun final.
+
 (define (longest-common-prefix-of-list words)
   (cond
     ((equal? (length words) 1) (car words))
@@ -67,8 +67,7 @@
 ;;   sufixelor din subarborele său)
 
 
-; TODO 4
-; Implementați funcția match-pattern-with-label care primește un
+; funcția match-pattern-with-label care primește un
 ; arbore de sufixe și un șablon nevid și realizează un singur pas 
 ; din procesul prezentat mai sus - identifică ramura arborelui a
 ; cărei etichetă începe cu prima literă din șablon, apoi
@@ -84,8 +83,7 @@
 ;   s-a găsit din start o etichetă care începe cu litera dorită
 ;   (ex1: (false, "n") pentru șablonul "numai" și eticheta "na")
 ;   (ex2: (false, "") pentru etichetă negăsită)
-; Obs: deși exemplele folosesc stringuri pentru claritate, vă
-; reamintim că în realitate lucrăm cu liste de caractere.
+
 (define (match-pattern-with-label st pattern)
   (cond
     ((false? (get-ch-branch st (car pattern))) (list #f '()))
@@ -96,11 +94,10 @@
     )
   )
 
-
-; TODO 5
-; Implementați funcția st-has-pattern? care primește un
+; funcția st-has-pattern? care primește un
 ; arbore de sufixe și un șablon și întoarce true dacă șablonul
 ; apare în arbore, respectiv false în caz contrar.
+
 (define (st-has-pattern? st pattern)
     (cond
       ((equal? (match-pattern-with-label st pattern) #t) #t)
